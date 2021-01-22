@@ -1,0 +1,35 @@
+{
+  "name": "Easy TSIMS",
+  "version": "1.0",
+  "description": "Unlock the true potential of TSIMS!",
+  "permissions": ["activeTab", "tabs", "http://101.230.1.163/*", "declarativeContent", "storage"],
+  "background": {
+    "scripts": ["scripts/jquery.js", "background.js"],
+    "persistent": false
+  },
+  "page_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "32": "images/icon32.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://101.230.1.163/*"],
+      "js": ["scripts/jquery.js", "pagewatcher.js", "beautify.js", "showHidden.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    "better_cas_add_record_info.js"
+  ],
+  "icons": {
+    "16": "images/icon16.png",
+    "32": "images/icon32.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "manifest_version": 2
+}
