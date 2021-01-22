@@ -1,4 +1,4 @@
-addGroupRecordInfo.addInfo = function (valID) {    
+addGroupRecordInfo.addInfo = function (valID) {
   $.ajax({
     url: "php/cas_add_record_info.php",
     dataType: "json",
@@ -18,18 +18,18 @@ addGroupRecordInfo.addInfo = function (valID) {
       let planProgress =
 `<div class="progress">
   <div style="width: ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Cdur / data.casPlan[0].C_CPDuration) * 100) : 0}%;" class="progress-bar progress-bar-danger" role="progressbar">
-    <p>C ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Cdur / data.casPlan[0].C_CPDuration) * 100) : 0}%</p>
+    <p style="color: black; overflow-x: visible; white-space: nowrap;">C ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Cdur / data.casPlan[0].C_CPDuration) * 100) : 0}%</p>
   </div>
 </div>
 <div class="progress">
   <div style="width: ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Adur / data.casPlan[0].C_APDuration) * 100) : 0}%;" class="progress-bar progress-bar-success" role="progressbar">
-    <p>A ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Adur / data.casPlan[0].C_APDuration) * 100) : 0}%</p>
+    <p style="color: black; overflow-x: visible; white-space: nowrap;">A ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Adur / data.casPlan[0].C_APDuration) * 100) : 0}%</p>
   </div>
 </div>
 <div class="progress">
   <div style="width: ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Sdur / data.casPlan[0].C_SPDuration) * 100) : 0}%;" class="progress-bar progress-bar-info" role="progressbar">
-    <p>S ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Sdur / data.casPlan[0].C_SPDuration) * 100) : 0}%</p>
-  </div>
+    <p style="color: black; overflow-x: visible; white-space: nowrap;">S ${data.status == "ok" ? Math.min(100, (data.casDuration[0].Sdur / data.casPlan[0].C_SPDuration) * 100) : 0}%</p>
+  </;div>
 </div>`;
       $("#d_plan_progress").append(planProgress);
       $("#castabledata").empty();
