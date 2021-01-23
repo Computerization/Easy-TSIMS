@@ -1,9 +1,19 @@
+let obs = new MutationObserver(function(mutations, obs) {
+  for (mutation of mutations) {
+    if (mutation.addedNodes.length == 30) {
+      let scr = document.createElement("script");
+      scr.src = chrome.runtime.getURL("better_cas_add_record_info.js");
+      let page = document.getElementsByClassName("page-container")[0];
+      page.insertBefore(scr, page.getElementsByTagName("script")[4]);
+      obs.disconnect();
+    }
+  }
+})
+
 function pageJump(name) {
   document.title = "TSIMS | " + name;
   if (name == "活动记录") {
-    let scr = document.createElement("script");
-    scr.src = chrome.runtime.getURL("better_cas_add_record_info.js");
-    document.getElementsByClassName("page-container")[0].appendChild(scr);
+    obs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
   }
 }
 
@@ -18,7 +28,7 @@ $(document).ready(function() {
           item.children[0].setAttribute("style", "color: lightgray;");
         }
       }
-      if (tab.children.length > 1)
+      if (tab.children.length > 1) {
         for (let item of tab.children[1].children) {
           item.onclick = function(event) {
             pageJump(event.path[1].children[0].innerText)
@@ -28,10 +38,11 @@ $(document).ready(function() {
             item.children[0].setAttribute("style", "color: lightgray;");
           }
         }
-      else
+      } else {
         tab.onclick = function(event) {
           pageJump(event.path[1].children[0].innerText)
         };
+      }
     }
   }
 })
