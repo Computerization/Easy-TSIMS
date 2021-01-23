@@ -1,9 +1,10 @@
 function addInfo(valID) {
   let name = "Overview", leaderyes = false;
-  let Cdur = 0, Adur = 0, Sdur = 0;
-  let CPDuration = 0, APDuration = 0, SPDuration = 0;
+  let CASdur = [0, 0, 0];
+  let CASPdur = [0, 0, 0];
   let casRecord = [];
   let groups = [];
+  let recordTime = [0, 0, 0];
   if (valID == 0) {
     let options = $("#select_my_group").children("option");
     for (let i = 1; i < options.length; i++)
@@ -23,14 +24,18 @@ function addInfo(valID) {
       success: function(data) {
         name = `${data.groups[0].C_NameC} (${data.groups[0].C_NameE})`;
         leaderyes = data.leaderyes;
-        Cdur += parseFloat(data.casDuration[0].Cdur);
-        Adur += parseFloat(data.casDuration[0].Adur);
-        Sdur += parseFloat(data.casDuration[0].Sdur);
-        CPDuration = parseFloat(data.casPlan[0].C_CPDuration);
-        APDuration = parseFloat(data.casPlan[0].C_APDuration);
-        SPDuration = parseFloat(data.casPlan[0].C_SPDuration);
-        for (let i = 0; i < data.casRecord.length; i++)
+        CASdur[0] += parseFloat(data.casDuration[0].Cdur);
+        CASdur[1] += parseFloat(data.casDuration[0].Adur);
+        CASdur[2] += parseFloat(data.casDuration[0].Sdur);
+        CASPdur[0] = parseFloat(data.casPlan[0].C_CPDuration);
+        CASPdur[1] = parseFloat(data.casPlan[0].C_APDuration);
+        CASPdur[2] = parseFloat(data.casPlan[0].C_SPDuration);
+        for (let i = 0; i < data.casRecord.length; i++) {
+          recordTime[0] += parseFloat(data.casRecord[i].C_DurationC);
+          recordTime[1] += parseFloat(data.casRecord[i].C_DurationA);
+          recordTime[2] += parseFloat(data.casRecord[i].C_DurationS);
           casRecord.push(data.casRecord[i]);
+        }
       },
       error: function() {
         alert("Request failed!");
@@ -47,12 +52,12 @@ function addInfo(valID) {
     $("input#text_du_s").attr("disabled", "disabled");
     $("#text_a_description").attr("disabled", "disabled");
   } else {
-    $("input#text_a_date").removeAttr("disabled", "disabled");
-    $("input#txt_active_title").removeAttr("disabled", "disabled");
-    $("input#text_du_c").removeAttr("disabled", "disabled");
-    $("input#text_du_a").removeAttr("disabled", "disabled");
-    $("input#text_du_s").removeAttr("disabled", "disabled");
-    $("#text_a_description").removeAttr("disabled", "disabled");
+    $("input#text_a_date").removeAttr("disabled");
+    $("input#txt_active_title").removeAttr("disabled");
+    $("input#text_du_c").removeAttr("disabled");
+    $("input#text_du_a").removeAttr("disabled");
+    $("input#text_du_s").removeAttr("disabled");
+    $("#text_a_description").removeAttr("disabled");
   }
   $("#s_my_group_name").empty();
   $("#s_my_group_name").append(`<a href="#"><i class="fa fa-group"></i>${name}</a>`);
@@ -61,23 +66,22 @@ function addInfo(valID) {
   else
     $("#d_groupleader_yes").hide();
   $("#d_plan_progress").empty();
-  let planProgress =
+  let planProgress = ""
+  let bars = [{type: "C", color: "danger"}, {type: "S", color: "success"}, {type: "S", color: "info"}]
+  for (let i = 0; i < 3; i++) {
+    planProgress +=
 `<div class="progress">
-  <div style="width: ${Math.min(100, Cdur / CPDuration * 100)}%;" class="progress-bar progress-bar-danger" role="progressbar">
-    <p style="color: black; overflow-x: visible; white-space: nowrap;">C ${Cdur} / ${CPDuration}</p>
+  <div style="width: ${Math.min(100, CASdur[i] / CASPdur[i] * 100)}%;" class="progress-bar progress-bar-${bars[i].color}" role="progressbar">
+    <p style="color: black; overflow-x: visible; white-space: nowrap;">${bars[i].type} ${CASdur[i]} / ${CASPdur[i]}</p>
   </div>
 </div>
-<div class="progress">
-  <div style="width: ${Math.min(100, Adur / APDuration * 100)}%;" class="progress-bar progress-bar-success" role="progressbar">
-  <p style="color: black; overflow-x: visible; white-space: nowrap;">A ${Adur} / ${APDuration}</p>
-  </div>
-</div>
-<div class="progress">
-  <div style="width: ${Math.min(100, Sdur / SPDuration * 100)}%;" class="progress-bar progress-bar-info" role="progressbar">
-  <p style="color: black; overflow-x: visible; white-space: nowrap;">S ${Sdur} / ${SPDuration}</p>
-  </div>
-</div>`;
+`;
+  }
   $("#d_plan_progress").append(planProgress);
+  $("#timestats").empty();
+  $("#timestats").append(`Total CAS time in the list below: <span class="badge badge-important">${recordTime[0]}</span>
+  <span class="badge badge-success">${recordTime[1]}</span>
+  <span class="badge badge-info">${recordTime[2]}</span>`);
   $("#castabledata").empty();
   let casdata = "";
   for (let i = 0; i < casRecord.length; i++) {
@@ -153,6 +157,11 @@ function init() {
       for (let i = 0; i < data.groups.length; i++) {
         $("#select_my_group").append(`<option value='${data.groups[i].C_GroupsID}'>${data.groups[i].C_GroupNo}_${data.groups[i].C_NameC} (${data.groups[i].C_NameE})</option>`);
       }
+      let timestats = document.createElement("div");
+      timestats.id = "timestats";
+      let leftside = document.getElementsByClassName("blog-tag-data")[0];
+      let table = document.getElementsByClassName("table-responsive")[0];
+      leftside.insertBefore(timestats, table);
       addInfo(0);
     },
     error: function() {
@@ -161,5 +170,46 @@ function init() {
   });
 }
 
+function saveRecords() {
+  $.ajax({
+    url: "php/cas_save_record.php",
+    dataType: "json",
+    type: "post",
+    data: {
+      groupid:  function(){return $('#select_my_group').children('option:selected').val();},
+      studentid:function(){return $('#studentid1').val();},
+      actdate:  function(){return $("input#text_a_date").val();},
+      acttitle: function(){return $("input#txt_active_title").val();},
+      durationC:function(){return $("input#text_du_c").val();},
+      durationA:function(){return $("input#text_du_a").val();},
+      durationS:function(){return $("input#text_du_s").val();},
+      actdesc:  function(){return $("#text_a_description").val();},
+      groupy:   $("#chkbox_g_record").attr("checked") == "checked" ? 1 : 0,
+      joiny:    $("#chkbox_s_join").attr("checked") == "checked" ? 1 : 0
+    },
+    success: function(data) {
+      if (data.status == 'ok') {
+        var selValue = $('#select_my_group').children('option:selected').val();
+        $("input#text_a_date").val("");
+        $("input#txt_active_title").val("");
+        $("input#text_du_c").val("");
+        $("input#text_du_a").val("");
+        $("input#text_du_s").val("");
+        $("#text_a_description").val("");
+        $("#chkbox_g_record").attr("checked", false);
+        $("#chkbox_s_join").attr("checked", false);
+        addGroupRecordInfo.addInfo(selValue);
+      } else {
+        alert(data.status);
+      }
+      $("#bn_save_records_info").removeAttr("disabled");
+    },
+    error: function() {
+        alert("Save Record failed!");
+    }
+  });
+}
+
 addGroupRecordInfo.addInfo = addInfo;
+addGroupRecordInfo.saveRecords = saveRecords;
 init();
