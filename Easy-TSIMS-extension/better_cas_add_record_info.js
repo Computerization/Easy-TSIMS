@@ -36,6 +36,7 @@ function addInfo(valID) {
           recordTime[2] += parseFloat(data.casRecord[i].C_DurationS);
           casRecord.push(data.casRecord[i]);
         }
+        casRecord.sort(function(a, b) {return a.C_Date.substr(0,10) > b.C_Date.substr(0,10);});
       },
       error: function() {
         alert("Request failed!");
@@ -89,10 +90,10 @@ function addInfo(valID) {
   $("#d_plan_progress").append(planProgress);
   $("#timestats").empty();
   $("#timestats").append(
-  `<p>Total CAS time in the list below: ${recordTime[0] + recordTime[1] + recordTime[2]} =
-    <span class="badge badge-important">${recordTime[0]}</span> +
-    <span class="badge badge-success">${recordTime[1]}</span> +
-    <span class="badge badge-info">${recordTime[2]}</span>
+  `<p>Total CAS time in the list below: ${Math.round((recordTime[0] + recordTime[1] + recordTime[2]) * 10) / 10} =
+    <span class="badge badge-important">${Math.round(recordTime[0] * 10) / 10}</span> +
+    <span class="badge badge-success">${Math.round(recordTime[1] * 10) / 10}</span> +
+    <span class="badge badge-info">${Math.round(recordTime[2] * 10) / 10}</span>
   </p>`);
   $("#castabledata").empty();
   let casdata = "";
@@ -174,6 +175,12 @@ function init() {
       let leftside = document.getElementsByClassName("blog-tag-data")[0];
       let table = document.getElementsByClassName("table-responsive")[0];
       leftside.insertBefore(timestats, table);
+      let wordcount = document.createElement("span");
+      let textarea = document.getElementById("text_a_description");
+      wordcount.style = "margin-right: 10px;";
+      wordcount.id = "wordcount";
+      wordcount.innerHTML = "当前字数：0";
+      textarea.parentNode.insertBefore(wordcount, textarea.nextElementSibling);
       addInfo(0);
     },
     error: function() {
@@ -225,3 +232,6 @@ function saveRecords() {
 addGroupRecordInfo.addInfo = addInfo;
 addGroupRecordInfo.saveRecords = saveRecords;
 init();
+document.getElementById("text_a_description").onkeyup = function() {
+  document.getElementById("wordcount").innerHTML = `当前字数：${this.value.trim().split(/\s+/g).length}`;
+};
