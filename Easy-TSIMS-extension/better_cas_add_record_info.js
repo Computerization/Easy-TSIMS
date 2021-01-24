@@ -66,57 +66,69 @@ function addInfo(valID) {
   else
     $("#d_groupleader_yes").hide();
   $("#d_plan_progress").empty();
-  let planProgress = ""
-  let bars = [{type: "C", color: "danger"}, {type: "S", color: "success"}, {type: "S", color: "info"}]
+  let planProgress = "";
+  let bars = [{type: "C", color: "danger"}, {type: "A", color: "success"}, {type: "S", color: "info"}];
+  let totalDur = CASdur[0] + CASdur[1] + CASdur[2];
+  planProgress += `<div class="progress">`;
   for (let i = 0; i < 3; i++) {
     planProgress +=
-`<div class="progress">
-  <div style="width: ${Math.min(100, CASdur[i] / CASPdur[i] * 100)}%;" class="progress-bar progress-bar-${bars[i].color}" role="progressbar">
-    <p style="color: black; overflow-x: visible; white-space: nowrap;">${bars[i].type} ${CASdur[i]} / ${CASPdur[i]}</p>
-  </div>
-</div>
-`;
+    `<div style="width: ${Math.min(CASdur[i] / totalDur * 100, CASdur[i] / CASPdur[i] * 100)}%;" class="progress-bar progress-bar-${bars[i].color}" role="progressbar">
+      <p style="color: black; overflow-x: visible; white-space: nowrap;">${bars[i].type} ${CASdur[i]}</p>
+    </div>`;
+  }
+  planProgress += `</div>`;
+  for (let i = 0; i < 3; i++) {
+    planProgress +=
+    `<div class="progress">
+      <div style="width: ${Math.min(100, CASdur[i] / CASPdur[i] * 100)}%;" class="progress-bar progress-bar-${bars[i].color}" role="progressbar">
+        <p style="color: black; overflow-x: visible; white-space: nowrap;">${bars[i].type} ${CASdur[i]} / ${CASPdur[i]}</p>
+      </div>
+    </div>
+    `;
   }
   $("#d_plan_progress").append(planProgress);
   $("#timestats").empty();
-  $("#timestats").append(`Total CAS time in the list below: <span class="badge badge-important">${recordTime[0]}</span>
-  <span class="badge badge-success">${recordTime[1]}</span>
-  <span class="badge badge-info">${recordTime[2]}</span>`);
+  $("#timestats").append(
+  `<p>Total CAS time in the list below: ${recordTime[0] + recordTime[1] + recordTime[2]} =
+    <span class="badge badge-important">${recordTime[0]}</span> +
+    <span class="badge badge-success">${recordTime[1]}</span> +
+    <span class="badge badge-info">${recordTime[2]}</span>
+  </p>`);
   $("#castabledata").empty();
   let casdata = "";
   for (let i = 0; i < casRecord.length; i++) {
     casdata +=
-`<tr id="item-${i}">
-  <td class="fc-header-center">${i + 1}</td>
-  <td id="Theme-${i}">${casRecord[i].C_Theme}</td>
-  <td class="fc-header-center">${casRecord[i].C_Date.substr(0,10)}</td>
-  <td class="fc-header-center"><span class="badge badge-important" id="DurC-${i}">${casRecord[i].C_DurationC}</span></td>
-  <td class="fc-header-center"><span class="badge badge-success" id="DurA-${i}">${casRecord[i].C_DurationA}</span></td>
-  <td class="fc-header-center"><span class="badge badge-info" id="DurS-${i}">${casRecord[i].C_DurationS}</span></td>
-  <td class="fc-header-center">${casRecord[i].T_JoinY == 1 ? "是" : "否"}</td>
-  <td class="fc-header-center">${casRecord[i].T_GroupY == 1 ? "是" : "否"}</td>
-  <td class="fc-header-center">${casRecord[i].C_Confirm == 2 ? "否" : "未"}</td>
-  <td>
-    <div id="Text-${i}" class="reflectionText" style="height: 50px; overflow-y: hidden; cursor: pointer;">
-      ${casRecord[i].C_Reflection}
-    </div>
-  </td>`;
-    if (valID != 0) {
-      casdata +=
-`  <td class="fc-header-center">
-    <input type="hidden" name="calid" value="${casRecord[i].C_ARecordID}">
-    <div class="btn-group btn-group-xs btn-group-solid">
-      <button type="button" id="${casRecord[i].C_ARecordID}" class="btn purple">
-        <i class="fa fa-trash-o"></i>
-        Delete
-      </button>
-      <button type="button" id="Reuse-${i}" class="btn blue" style="margin-top: 5pt;">
-        <i class="fa fa-file-o"></i>
-        Reuse
-      </button>
-    </div>
-  </td>
-</tr>`;
+    `<tr id="item-${i}">
+      <td class="fc-header-center">${i + 1}</td>
+      <td id="Theme-${i}">${casRecord[i].C_Theme}</td>
+      <td class="fc-header-center">${casRecord[i].C_Date.substr(0,10)}</td>
+      <td class="fc-header-center"><span class="badge badge-important" id="DurC-${i}">${casRecord[i].C_DurationC}</span></td>
+      <td class="fc-header-center"><span class="badge badge-success" id="DurA-${i}">${casRecord[i].C_DurationA}</span></td>
+      <td class="fc-header-center"><span class="badge badge-info" id="DurS-${i}">${casRecord[i].C_DurationS}</span></td>
+      <td class="fc-header-center">${casRecord[i].T_JoinY == 1 ? "是" : "否"}</td>
+      <td class="fc-header-center">${casRecord[i].T_GroupY == 1 ? "是" : "否"}</td>
+      <td class="fc-header-center">${casRecord[i].C_Confirm == 2 ? "否" : "未"}</td>
+      <td>
+        <div id="Text-${i}" class="reflectionText" style="height: 50px; overflow-y: hidden; cursor: pointer;">
+          ${casRecord[i].C_Reflection}
+        </div>
+      </td>`;
+        if (valID != 0) {
+          casdata +=
+    ` <td class="fc-header-center">
+        <input type="hidden" name="calid" value="${casRecord[i].C_ARecordID}">
+        <div class="btn-group btn-group-xs btn-group-solid">
+          <button type="button" id="${casRecord[i].C_ARecordID}" class="btn purple">
+            <i class="fa fa-trash-o"></i>
+            Delete
+          </button>
+          <button type="button" id="Reuse-${i}" class="btn blue" style="margin-top: 5pt;">
+            <i class="fa fa-file-o"></i>
+            Reuse
+          </button>
+        </div>
+      </td>
+    </tr>`;
     } else {
       casdata += "<td></td></tr>";
     }
@@ -142,9 +154,9 @@ function addInfo(valID) {
 
 function init() {
   $.ajax({
-    url: 'php/cas_add_mygroups_dropdown.php',
-    dataType: 'json',
-    type: 'post',
+    url: "php/cas_add_mygroups_dropdown.php",
+    dataType: "json",
+    type: "post",
     data: {},
     success: function(data) {
       $("#select_my_group").empty();
@@ -176,20 +188,20 @@ function saveRecords() {
     dataType: "json",
     type: "post",
     data: {
-      groupid:  function(){return $('#select_my_group').children('option:selected').val();},
-      studentid:function(){return $('#studentid1').val();},
-      actdate:  function(){return $("input#text_a_date").val();},
-      acttitle: function(){return $("input#txt_active_title").val();},
-      durationC:function(){return $("input#text_du_c").val();},
-      durationA:function(){return $("input#text_du_a").val();},
-      durationS:function(){return $("input#text_du_s").val();},
-      actdesc:  function(){return $("#text_a_description").val();},
-      groupy:   $("#chkbox_g_record").attr("checked") == "checked" ? 1 : 0,
-      joiny:    $("#chkbox_s_join").attr("checked") == "checked" ? 1 : 0
+      groupid:   function() {return $("#select_my_group").children("option:selected").val();},
+      studentid: function() {return $('#studentid1').val();},
+      actdate:   function() {return $("input#text_a_date").val();},
+      acttitle:  function() {return $("input#txt_active_title").val();},
+      durationC: function() {return $("input#text_du_c").val();},
+      durationA: function() {return $("input#text_du_a").val();},
+      durationS: function() {return $("input#text_du_s").val();},
+      actdesc:   function() {return $("#text_a_description").val();},
+      groupy:    $("#chkbox_g_record").attr("checked") == "checked" ? 1 : 0,
+      joiny:     $("#chkbox_s_join").attr("checked") == "checked" ? 1 : 0
     },
     success: function(data) {
-      if (data.status == 'ok') {
-        var selValue = $('#select_my_group').children('option:selected').val();
+      if (data.status == "ok") {
+        var selValue = $("#select_my_group").children("option:selected").val();
         $("input#text_a_date").val("");
         $("input#txt_active_title").val("");
         $("input#text_du_c").val("");
