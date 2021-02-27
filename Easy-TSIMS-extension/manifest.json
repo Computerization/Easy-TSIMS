@@ -4,7 +4,7 @@
   "description": "Unlock the true potential of TSIMS!",
   "permissions": ["activeTab", "tabs", "http://101.230.1.163/*", "declarativeContent", "storage"],
   "background": {
-    "scripts": ["scripts/jquery.js", "background.js"],
+    "scripts": ["thirdParty/jquery.js", "scripts/background.js"],
     "persistent": false
   },
   "page_action": {
@@ -19,11 +19,11 @@
   "content_scripts": [
     {
       "matches": ["http://101.230.1.163/*"],
-      "js": ["scripts/jquery.js", "beautify.js", "modify_navbar.js"]
+      "js": ["thirdParty/jquery.js", "scripts/beautify.js", "scripts/modify_navbar.js"]
     }
   ],
   "web_accessible_resources": [
-    "better_cas_add_record_info.js"
+    "scripts/better_cas_add_record_info.js"
   ],
   "icons": {
     "16": "images/icon16.png",

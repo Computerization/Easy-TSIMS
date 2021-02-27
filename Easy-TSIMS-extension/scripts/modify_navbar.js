@@ -2,7 +2,7 @@ let obs = new MutationObserver(function(mutations, obs) {
   for (mutation of mutations) {
     if (mutation.addedNodes.length == 30) {
       let scr = document.createElement("script");
-      scr.src = chrome.runtime.getURL("better_cas_add_record_info.js");
+      scr.src = chrome.runtime.getURL("scripts/better_cas_add_record_info.js");
       let page = document.getElementsByClassName("page-container")[0];
       page.insertBefore(scr, page.getElementsByTagName("script")[4]);
       obs.disconnect();
