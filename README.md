@@ -16,6 +16,7 @@ If the hidden tabs fail to show up the first time you install the extension, but
 - 1.1 CAS update
   - 1.1.0: Add "CAS overview" function
   - 1.1.1: Rewrite "CAS progress bar"
+  - [WIP] 1.1.2: Dropdown menu auto select
 
 ## More information
 Here is a brief introduction article: https://mp.weixin.qq.com/s/y--UoBa6jJjQJwMl0jpn4g

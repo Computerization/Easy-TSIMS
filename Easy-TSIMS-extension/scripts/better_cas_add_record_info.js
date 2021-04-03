@@ -30,13 +30,13 @@ function addInfo(valID) {
         CASPdur[0] = parseFloat(data.casPlan[0].C_CPDuration);
         CASPdur[1] = parseFloat(data.casPlan[0].C_APDuration);
         CASPdur[2] = parseFloat(data.casPlan[0].C_SPDuration);
-        for (let i = 0; i < data.casRecord.length; i++) {
-          recordTime[0] += parseFloat(data.casRecord[i].C_DurationC);
-          recordTime[1] += parseFloat(data.casRecord[i].C_DurationA);
-          recordTime[2] += parseFloat(data.casRecord[i].C_DurationS);
-          casRecord.push(data.casRecord[i]);
+        for (let record of data.casRecord) {
+          recordTime[0] += parseFloat(record.C_DurationC);
+          recordTime[1] += parseFloat(record.C_DurationA);
+          recordTime[2] += parseFloat(record.C_DurationS);
+          casRecord.push(record);
         }
-        casRecord.sort(function(a, b) {return a.C_Date.substr(0,10) > b.C_Date.substr(0,10);});
+        casRecord.sort((a, b) => a.C_Date.substr(0,10) > b.C_Date.substr(0,10));
       },
       error: function() {
         alert("Request failed!");
@@ -67,9 +67,9 @@ function addInfo(valID) {
   else
     $("#d_groupleader_yes").hide();
   $("#d_plan_progress").empty();
-  let planProgress = "";
   let bars = [{type: "C", color: "danger"}, {type: "A", color: "success"}, {type: "S", color: "info"}];
   let totalDur = CASdur[0] + CASdur[1] + CASdur[2];
+  let planProgress = "";
   planProgress += `<div class="progress">`;
   for (let i = 0; i < 3; i++) {
     planProgress +=
@@ -114,8 +114,8 @@ function addInfo(valID) {
           ${casRecord[i].C_Reflection}
         </div>
       </td>`;
-        if (valID != 0) {
-          casdata +=
+    if (valID != 0) {
+      casdata +=
     ` <td class="fc-header-center">
         <input type="hidden" name="calid" value="${casRecord[i].C_ARecordID}">
         <div class="btn-group btn-group-xs btn-group-solid">
@@ -135,7 +135,7 @@ function addInfo(valID) {
     }
   }
   $("#castabledata").append(casdata);
-  $("button.btn.blue").click(function() {
+  $("button.btn.blue").click(() => {
     let i = $(this).attr("id").substr(6);
     $("input#txt_active_title").val($(`#Theme-${i}`)[0].innerText);
     $("input#text_du_c").val($(`#DurC-${i}`)[0].innerText);
@@ -144,7 +144,7 @@ function addInfo(valID) {
     $("#text_a_description").val($(`#Text-${i}`)[0].innerText);
     $("#bn_save_records_info").removeAttr("disabled");
   });
-  $(".reflectionText").click(function() {
+  $(".reflectionText").click(() => {
     if ($(this).attr("style").indexOf("height") >= 0)
       $(this).attr("style", "cursor: pointer;");
     else
@@ -195,14 +195,14 @@ function saveRecords() {
     dataType: "json",
     type: "post",
     data: {
-      groupid:   function() {return $("#select_my_group").children("option:selected").val();},
-      studentid: function() {return $('#studentid1').val();},
-      actdate:   function() {return $("input#text_a_date").val();},
-      acttitle:  function() {return $("input#txt_active_title").val();},
-      durationC: function() {return $("input#text_du_c").val();},
-      durationA: function() {return $("input#text_du_a").val();},
-      durationS: function() {return $("input#text_du_s").val();},
-      actdesc:   function() {return $("#text_a_description").val();},
+      groupid:   () => { return $("#select_my_group").children("option:selected").val(); },
+      studentid: () => { return $('#studentid1').val(); },
+      actdate:   () => { return $("input#text_a_date").val(); },
+      acttitle:  () => { return $("input#txt_active_title").val(); },
+      durationC: () => { return $("input#text_du_c").val(); },
+      durationA: () => { return $("input#text_du_a").val(); },
+      durationS: () => { return $("input#text_du_s").val(); },
+      actdesc:   () => { return $("#text_a_description").val(); },
       groupy:    $("#chkbox_g_record").attr("checked") == "checked" ? 1 : 0,
       joiny:     $("#chkbox_s_join").attr("checked") == "checked" ? 1 : 0
     },
@@ -232,6 +232,6 @@ function saveRecords() {
 addGroupRecordInfo.addInfo = addInfo;
 addGroupRecordInfo.saveRecords = saveRecords;
 init();
-document.getElementById("text_a_description").onkeyup = function() {
+document.getElementById("text_a_description").onkeyup = () => {
   document.getElementById("wordcount").innerHTML = `当前字数：${this.value.trim().split(/\s+/g).length}`;
 };

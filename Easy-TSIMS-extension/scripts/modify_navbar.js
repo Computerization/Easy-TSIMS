@@ -1,4 +1,4 @@
-let obs = new MutationObserver(function(mutations, obs) {
+let obs = new MutationObserver((mutations, obs) => {
   for (mutation of mutations) {
     if (mutation.addedNodes.length == 30) {
       let scr = document.createElement("script");
@@ -10,14 +10,29 @@ let obs = new MutationObserver(function(mutations, obs) {
   }
 })
 
+// let dropdownObs = new MutationObserver((mutations, obs) => {
+//   for (mutation of mutations) {
+//     if (mutation.addedNodes.length > 5) {
+//       let dropdown = document.getElementById("select_item_term");
+//       if (dropdown != null) {
+//         let options = dropdown.children;
+//         console.log(options);
+//         console.log(options.length);
+//         dropdown.children[1].selected = true;
+//       }
+//     }
+//   }
+// })
+
 function pageJump(name) {
   document.title = "TSIMS | " + name;
+  // dropdownObs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
   if (name == "活动记录") {
     obs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
   }
 }
 
-$(document).ready(function() {
+$(document).ready(() => {
   for (let tab of document.getElementsByClassName("dropdown")) {
     if (tab.id != "menu_trascript2") {
       if (tab.hasAttribute("style")) {
@@ -30,7 +45,7 @@ $(document).ready(function() {
       }
       if (tab.children.length > 1) {
         for (let item of tab.children[1].children) {
-          item.onclick = function(event) {
+          item.onclick = (event) => {
             pageJump(event.path[1].children[0].innerText)
           };
           if (item.hasAttribute("style")) {
@@ -39,7 +54,7 @@ $(document).ready(function() {
           }
         }
       } else {
-        tab.onclick = function(event) {
+        tab.onclick = (event) => {
           pageJump(event.path[1].children[0].innerText)
         };
       }
