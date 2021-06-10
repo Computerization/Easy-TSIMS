@@ -135,7 +135,7 @@ function addInfo(valID) {
     }
   }
   $("#castabledata").append(casdata);
-  $("button.btn.blue").click(() => {
+  $("button.btn.blue").on("click", function() {
     let i = $(this).attr("id").substr(6);
     $("input#txt_active_title").val($(`#Theme-${i}`)[0].innerText);
     $("input#text_du_c").val($(`#DurC-${i}`)[0].innerText);
@@ -144,7 +144,7 @@ function addInfo(valID) {
     $("#text_a_description").val($(`#Text-${i}`)[0].innerText);
     $("#bn_save_records_info").removeAttr("disabled");
   });
-  $(".reflectionText").click(() => {
+  $(".reflectionText").on("click", function() {
     if ($(this).attr("style").indexOf("height") >= 0)
       $(this).attr("style", "cursor: pointer;");
     else
@@ -232,6 +232,6 @@ function saveRecords() {
 addGroupRecordInfo.addInfo = addInfo;
 addGroupRecordInfo.saveRecords = saveRecords;
 init();
-document.getElementById("text_a_description").onkeyup = () => {
+document.getElementById("text_a_description").onkeyup = function() {
   document.getElementById("wordcount").innerHTML = `当前字数：${this.value.trim().split(/\s+/g).length}`;
 };
