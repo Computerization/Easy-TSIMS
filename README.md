@@ -17,6 +17,8 @@ If the hidden tabs fail to show up the first time you install the extension, but
   - 1.1.0: Add "CAS overview" function
   - 1.1.1: Rewrite "CAS progress bar"
   - [WIP] 1.1.2: Dropdown menu auto select
+- 1.2 Grade update
+  - 1.2.0: Add "What if" function in semester grade report
 
 ## More information
 Here is a brief introduction article: https://mp.weixin.qq.com/s/y--UoBa6jJjQJwMl0jpn4g
