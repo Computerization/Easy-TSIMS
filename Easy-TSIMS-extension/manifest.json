@@ -1,13 +1,13 @@
 {
   "name": "Easy TSIMS",
-  "version": "1.1.1.1",
+  "version": "2.0.0",
   "description": "Unlock the true potential of TSIMS!",
-  "permissions": ["activeTab", "tabs", "http://101.230.1.163/*", "http://101.230.1.173:6300/*", "http://s.wflms.cn/*", "declarativeContent", "storage"],
+  "permissions": ["activeTab", "tabs", "declarativeContent", "storage"],
+  "host_permissions": ["http://101.230.1.163/*", "http://101.230.1.173:6300/*", "http://s.wflms.cn/*"],
   "background": {
-    "scripts": ["thirdParty/jquery.js", "scripts/background.js"],
-    "persistent": false
+    "service_worker": "worker.js"
   },
-  "page_action": {
+  "action": {
     "default_popup": "popup.html",
     "default_icon": {
       "16": "images/icon16.png",
@@ -23,7 +23,14 @@
     }
   ],
   "web_accessible_resources": [
-    "scripts/better_cas_add_record_info.js"
+    {
+      "resources": [
+        "scripts/better_cas_add_record_info.js"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
+    }
   ],
   "icons": {
     "16": "images/icon16.png",
@@ -31,5 +38,5 @@
     "48": "images/icon48.png",
     "128": "images/icon128.png"
   },
-  "manifest_version": 2
+  "manifest_version": 3
 }

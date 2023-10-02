@@ -20,6 +20,7 @@ If the hidden tabs fail to show up the first time you install the extension, but
   - [WIP] 1.1.2: Dropdown menu auto select
 - 1.2 Grade update
   - 1.2.0: Add "What if" function in semester grade report
+- 2.0 Migrate to Manifest V3
 
 ## More information
 Here is a brief introduction article: https://mp.weixin.qq.com/s/y--UoBa6jJjQJwMl0jpn4g
