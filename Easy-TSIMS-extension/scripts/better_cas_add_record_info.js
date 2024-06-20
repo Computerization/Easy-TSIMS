@@ -108,7 +108,7 @@ function addInfo(valID) {
       <td class="fc-header-center"><span class="badge badge-info" id="DurS-${i}">${casRecord[i].C_DurationS}</span></td>
       <td class="fc-header-center">${casRecord[i].T_JoinY == 1 ? "是" : "否"}</td>
       <td class="fc-header-center">${casRecord[i].T_GroupY == 1 ? "是" : "否"}</td>
-      <td class="fc-header-center">${casRecord[i].C_Confirm == 2 ? "否" : "未"}</td>
+      <td class="fc-header-center">${casRecord[i].C_Confirm === "0" ? "未" : (casRecord[i].C_Confirm === "1" ? "已确认" : "否" )}</td>
       <td>
         <div id="Text-${i}" class="reflectionText" style="height: 50px; overflow-y: hidden; cursor: pointer;">
           ${casRecord[i].C_Reflection}
