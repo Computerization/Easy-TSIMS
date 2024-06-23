@@ -28,7 +28,6 @@
         "http://s.wflms.cn/*"
       ],
       "js": [
-        "thirdParty/jquery.js",
         "scripts/beautify.js",
         "scripts/modify_navbar.js"
       ]
