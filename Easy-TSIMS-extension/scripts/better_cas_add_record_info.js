@@ -207,88 +207,84 @@ async function addInfo(valID) {
 }
 
 async function init() {
-  await fetch("php/cas_add_mygroups_dropdown.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({}),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      const select = document.getElementById("select_my_group");
-      select.innerHTML = "<option value='0'>Overview</option>";
-      for (const group of data.nogroups) {
-        if (group.C_GroupNo === "014001") {
-          select.innerHTML += `<option value='${group.C_GroupsID}'>${group.C_NameC} (${group.C_NameE})</option>`;
-        }
+  try {
+    const data = await fetch("php/cas_add_mygroups_dropdown.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    }).then((response) => response.json());
+    const select = document.getElementById("select_my_group");
+    select.innerHTML = "<option value='0'>Overview</option>";
+    for (const group of data.nogroups) {
+      if (group.C_GroupNo === "014001") {
+        select.innerHTML += `<option value='${group.C_GroupsID}'>${group.C_NameC} (${group.C_NameE})</option>`;
       }
-      for (const group of data.groups) {
-        select.innerHTML += `<option value='${group.C_GroupsID}'>${group.C_GroupNo}_${group.C_NameC} (${group.C_NameE})</option>`;
-      }
-      const timestats = document.createElement("div");
-      timestats.id = "timestats";
-      const leftside = document.getElementsByClassName("blog-tag-data")[0];
-      const table = document.getElementsByClassName("table-responsive")[0];
-      leftside.insertBefore(timestats, table);
-      const wordcount = document.createElement("span");
-      const textarea = document.getElementById("text_a_description");
-      wordcount.style = "margin-right: 10px;";
-      wordcount.id = "wordcount";
-      wordcount.innerHTML = "当前字数：0";
-      textarea.parentNode.insertBefore(wordcount, textarea.nextElementSibling);
-      return addInfo(0);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+    }
+    for (const group of data.groups) {
+      select.innerHTML += `<option value='${group.C_GroupsID}'>${group.C_GroupNo}_${group.C_NameC} (${group.C_NameE})</option>`;
+    }
+    const timestats = document.createElement("div");
+    timestats.id = "timestats";
+    const leftside = document.getElementsByClassName("blog-tag-data")[0];
+    const table = document.getElementsByClassName("table-responsive")[0];
+    leftside.insertBefore(timestats, table);
+    const wordcount = document.createElement("span");
+    const textarea = document.getElementById("text_a_description");
+    wordcount.style = "margin-right: 10px;";
+    wordcount.id = "wordcount";
+    wordcount.innerHTML = "当前字数：0";
+    textarea.parentNode.insertBefore(wordcount, textarea.nextElementSibling);
+    return addInfo(0);
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 async function saveRecords() {
-  await fetch("php/cas_save_record.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      groupid: document.getElementById("select_my_group").value,
-      studentid: document.getElementById("studentid1").value,
-      actdate: document.getElementById("text_a_date").value,
-      acttitle: document.getElementById("txt_active_title").value,
-      durationC: document.getElementById("text_du_c").value,
-      durationA: document.getElementById("text_du_a").value,
-      durationS: document.getElementById("text_du_s").value,
-      actdesc: document.getElementById("text_a_description").value,
-      groupy: document.getElementById("chkbox_g_record").checked ? 1 : 0,
-      joiny: document.getElementById("chkbox_s_join").checked ? 1 : 0,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "ok") {
-        const selValue = document.getElementById("select_my_group").value;
-        for (const id of [
-          "text_a_date",
-          "txt_active_title",
-          "text_du_c",
-          "text_du_a",
-          "text_du_s",
-          "text_a_description",
-        ]) {
-          document.getElementById(id).value = "";
-        }
-        document.getElementById("chkbox_g_record").checked = false;
-        document.getElementById("chkbox_s_join").checked = false;
-        addGroupRecordInfo.addInfo(selValue);
-      } else {
-        alert(data.status);
+  try {
+    const data = await fetch("php/cas_save_record.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        groupid: document.getElementById("select_my_group").value,
+        studentid: document.getElementById("studentid1").value,
+        actdate: document.getElementById("text_a_date").value,
+        acttitle: document.getElementById("txt_active_title").value,
+        durationC: document.getElementById("text_du_c").value,
+        durationA: document.getElementById("text_du_a").value,
+        durationS: document.getElementById("text_du_s").value,
+        actdesc: document.getElementById("text_a_description").value,
+        groupy: document.getElementById("chkbox_g_record").checked ? 1 : 0,
+        joiny: document.getElementById("chkbox_s_join").checked ? 1 : 0,
+      }),
+    }).then((response) => response.json());
+    if (data.status === "ok") {
+      const selValue = document.getElementById("select_my_group").value;
+      for (const id of [
+        "text_a_date",
+        "txt_active_title",
+        "text_du_c",
+        "text_du_a",
+        "text_du_s",
+        "text_a_description",
+      ]) {
+        document.getElementById(id).value = "";
       }
-      document.getElementById("bn_save_records_info").removeAttribute("disabled");
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("Save Record failed!");
-    });
+      document.getElementById("chkbox_g_record").checked = false;
+      document.getElementById("chkbox_s_join").checked = false;
+      addGroupRecordInfo.addInfo(selValue);
+    } else {
+      alert(data.status);
+    }
+    document.getElementById("bn_save_records_info").removeAttribute("disabled");
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Save Record failed!");
+  }
 }
 
 addGroupRecordInfo.addInfo = addInfo;
