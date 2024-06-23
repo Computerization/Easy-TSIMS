@@ -8,18 +8,25 @@ async function addInfo(valID) {
   const recordTime = [0, 0, 0];
   if (valID === 0) {
     const options = document.querySelectorAll("#select_my_group option");
-    for (const option of options) groups.push(option.value);
+    for (const option of options) {
+      var data = new URLSearchParams();
+      data.append("groupid", option.value);
+      groups.push(data);
+    }
   } else {
-    groups.push(valID);
+    var data = new URLSearchParams();
+    data.append("groupid", Number(valID));
+    groups.push(data);
   }
   const fetches = groups.map((groupid) =>
     fetch("php/cas_add_record_info.php", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({ groupid }),
+      body: groupid,
     })
+      .then(response => response.json())
       .then((data) => {
         name = `${data.groups[0].C_NameC} (${data.groups[0].C_NameE})`;
         leaderyes = data.leaderyes;
@@ -177,7 +184,7 @@ async function addInfo(valID) {
       casdata += "<td></td></tr>";
     }
   }
-  document.getElementById("casabledata").innerHTML = casdata;
+  document.getElementById("castabledata").innerHTML = casdata;
   document.querySelector("button.btn.blue").addEventListener("click", (e) => {
     const i = e.target.id.substring(6);
     for (const [inputId, recordId] of [
