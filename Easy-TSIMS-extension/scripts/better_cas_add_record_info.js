@@ -1,5 +1,6 @@
 function addInfo(valID) {
-  let name = "Overview", leaderyes = false;
+  let name = "Overview",
+    leaderyes = false;
   let CASdur = [0, 0, 0];
   let CASPdur = [0, 0, 0];
   let casRecord = [];
@@ -7,8 +8,7 @@ function addInfo(valID) {
   let recordTime = [0, 0, 0];
   if (valID == 0) {
     let options = $("#select_my_group").children("option");
-    for (let i = 1; i < options.length; i++)
-      groups.push(options[i].value);
+    for (let i = 1; i < options.length; i++) groups.push(options[i].value);
   } else {
     groups.push(valID);
   }
@@ -19,9 +19,9 @@ function addInfo(valID) {
       type: "post",
       async: false,
       data: {
-        groupid: groups[i]
+        groupid: groups[i],
       },
-      success: function(data) {
+      success: function (data) {
         name = `${data.groups[0].C_NameC} (${data.groups[0].C_NameE})`;
         leaderyes = data.leaderyes;
         CASdur[0] += parseFloat(data.casDuration[0].Cdur);
@@ -36,11 +36,13 @@ function addInfo(valID) {
           recordTime[2] += parseFloat(record.C_DurationS);
           casRecord.push(record);
         }
-        casRecord.sort((a, b) => a.C_Date.substr(0,10) > b.C_Date.substr(0,10));
+        casRecord.sort(
+          (a, b) => a.C_Date.substr(0, 10) > b.C_Date.substr(0, 10),
+        );
       },
-      error: function() {
+      error: function () {
         alert("Request failed!");
-      }
+      },
     });
   }
   if (valID == 0) {
@@ -61,27 +63,29 @@ function addInfo(valID) {
     $("#text_a_description").removeAttr("disabled");
   }
   $("#s_my_group_name").empty();
-  $("#s_my_group_name").append(`<a href="#"><i class="fa fa-group"></i>${name}</a>`);
-  if (leaderyes != 0)
-    $("#d_groupleader_yes").show();
-  else
-    $("#d_groupleader_yes").hide();
+  $("#s_my_group_name").append(
+    `<a href="#"><i class="fa fa-group"></i>${name}</a>`,
+  );
+  if (leaderyes != 0) $("#d_groupleader_yes").show();
+  else $("#d_groupleader_yes").hide();
   $("#d_plan_progress").empty();
-  let bars = [{type: "C", color: "danger"}, {type: "A", color: "success"}, {type: "S", color: "info"}];
+  let bars = [
+    { type: "C", color: "danger" },
+    { type: "A", color: "success" },
+    { type: "S", color: "info" },
+  ];
   let totalDur = CASdur[0] + CASdur[1] + CASdur[2];
   let planProgress = "";
   planProgress += `<div class="progress">`;
   for (let i = 0; i < 3; i++) {
-    planProgress +=
-    `<div style="width: ${Math.min(CASdur[i] / totalDur * 100, CASdur[i] / CASPdur[i] * 100)}%;" class="progress-bar progress-bar-${bars[i].color}" role="progressbar">
+    planProgress += `<div style="width: ${Math.min((CASdur[i] / totalDur) * 100, (CASdur[i] / CASPdur[i]) * 100)}%;" class="progress-bar progress-bar-${bars[i].color}" role="progressbar">
       <p style="color: black; overflow-x: visible; white-space: nowrap;">${bars[i].type} ${CASdur[i]}</p>
     </div>`;
   }
   planProgress += `</div>`;
   for (let i = 0; i < 3; i++) {
-    planProgress +=
-    `<div class="progress">
-      <div style="width: ${Math.min(100, CASdur[i] / CASPdur[i] * 100)}%;" class="progress-bar progress-bar-${bars[i].color}" role="progressbar">
+    planProgress += `<div class="progress">
+      <div style="width: ${Math.min(100, (CASdur[i] / CASPdur[i]) * 100)}%;" class="progress-bar progress-bar-${bars[i].color}" role="progressbar">
         <p style="color: black; overflow-x: visible; white-space: nowrap;">${bars[i].type} ${CASdur[i]} / ${CASPdur[i]}</p>
       </div>
     </div>
@@ -90,33 +94,32 @@ function addInfo(valID) {
   $("#d_plan_progress").append(planProgress);
   $("#timestats").empty();
   $("#timestats").append(
-  `<p>Total CAS time in the list below: ${Math.round((recordTime[0] + recordTime[1] + recordTime[2]) * 10) / 10} =
+    `<p>Total CAS time in the list below: ${Math.round((recordTime[0] + recordTime[1] + recordTime[2]) * 10) / 10} =
     <span class="badge badge-important">${Math.round(recordTime[0] * 10) / 10}</span> +
     <span class="badge badge-success">${Math.round(recordTime[1] * 10) / 10}</span> +
     <span class="badge badge-info">${Math.round(recordTime[2] * 10) / 10}</span>
-  </p>`);
+  </p>`,
+  );
   $("#castabledata").empty();
   let casdata = "";
   for (let i = 0; i < casRecord.length; i++) {
-    casdata +=
-    `<tr id="item-${i}">
+    casdata += `<tr id="item-${i}">
       <td class="fc-header-center">${i + 1}</td>
       <td id="Theme-${i}">${casRecord[i].C_Theme}</td>
-      <td class="fc-header-center">${casRecord[i].C_Date.substr(0,10)}</td>
+      <td class="fc-header-center">${casRecord[i].C_Date.substr(0, 10)}</td>
       <td class="fc-header-center"><span class="badge badge-important" id="DurC-${i}">${casRecord[i].C_DurationC}</span></td>
       <td class="fc-header-center"><span class="badge badge-success" id="DurA-${i}">${casRecord[i].C_DurationA}</span></td>
       <td class="fc-header-center"><span class="badge badge-info" id="DurS-${i}">${casRecord[i].C_DurationS}</span></td>
       <td class="fc-header-center">${casRecord[i].T_JoinY == 1 ? "是" : "否"}</td>
       <td class="fc-header-center">${casRecord[i].T_GroupY == 1 ? "是" : "否"}</td>
-      <td class="fc-header-center">${casRecord[i].C_Confirm == 0 ? "未" : (casRecord[i].C_Confirm == 1 ? "已确认" : "否" )}</td>
+      <td class="fc-header-center">${casRecord[i].C_Confirm == 0 ? "未" : casRecord[i].C_Confirm == 1 ? "已确认" : "否"}</td>
       <td>
         <div id="Text-${i}" class="reflectionText" style="height: 50px; overflow-y: hidden; cursor: pointer;">
           ${casRecord[i].C_Reflection}
         </div>
       </td>`;
     if (valID != 0) {
-      casdata +=
-    ` <td class="fc-header-center">
+      casdata += ` <td class="fc-header-center">
         <input type="hidden" name="calid" value="${casRecord[i].C_ARecordID}">
         <div class="btn-group btn-group-xs btn-group-solid">
           <button type="button" id="${casRecord[i].C_ARecordID}" class="btn purple">
@@ -135,7 +138,7 @@ function addInfo(valID) {
     }
   }
   $("#castabledata").append(casdata);
-  $("button.btn.blue").on("click", function() {
+  $("button.btn.blue").on("click", function () {
     let i = $(this).attr("id").substr(6);
     $("input#txt_active_title").val($(`#Theme-${i}`)[0].innerText);
     $("input#text_du_c").val($(`#DurC-${i}`)[0].innerText);
@@ -144,12 +147,15 @@ function addInfo(valID) {
     $("#text_a_description").val($(`#Text-${i}`)[0].innerText);
     $("#bn_save_records_info").removeAttr("disabled");
   });
-  $(".reflectionText").on("click", function() {
+  $(".reflectionText").on("click", function () {
     if ($(this).attr("style").indexOf("height") >= 0)
       $(this).attr("style", "cursor: pointer;");
     else
-      $(this).attr("style", "height: 50px; overflow-y: hidden; cursor: pointer;");
-  })
+      $(this).attr(
+        "style",
+        "height: 50px; overflow-y: hidden; cursor: pointer;",
+      );
+  });
   $("#bn_save_records_info").removeAttr("disabled");
 }
 
@@ -159,16 +165,20 @@ function init() {
     dataType: "json",
     type: "post",
     data: {},
-    success: function(data) {
+    success: function (data) {
       $("#select_my_group").empty();
       $("#select_my_group").append("<option value='0'>Overview</option>");
       for (let i = 0; i < data.nogroups.length; i++) {
-        if (data.nogroups[i].C_GroupNo == '014001') {
-          $("#select_my_group").append(`<option value='${data.nogroups[i].C_GroupsID}'>${data.nogroups[i].C_NameC} (${data.nogroups[i].C_NameE})</option>`);
+        if (data.nogroups[i].C_GroupNo == "014001") {
+          $("#select_my_group").append(
+            `<option value='${data.nogroups[i].C_GroupsID}'>${data.nogroups[i].C_NameC} (${data.nogroups[i].C_NameE})</option>`,
+          );
         }
       }
       for (let i = 0; i < data.groups.length; i++) {
-        $("#select_my_group").append(`<option value='${data.groups[i].C_GroupsID}'>${data.groups[i].C_GroupNo}_${data.groups[i].C_NameC} (${data.groups[i].C_NameE})</option>`);
+        $("#select_my_group").append(
+          `<option value='${data.groups[i].C_GroupsID}'>${data.groups[i].C_GroupNo}_${data.groups[i].C_NameC} (${data.groups[i].C_NameE})</option>`,
+        );
       }
       let timestats = document.createElement("div");
       timestats.id = "timestats";
@@ -183,9 +193,9 @@ function init() {
       textarea.parentNode.insertBefore(wordcount, textarea.nextElementSibling);
       addInfo(0);
     },
-    error: function() {
+    error: function () {
       alert("Request failed!");
-    }
+    },
   });
 }
 
@@ -195,18 +205,34 @@ function saveRecords() {
     dataType: "json",
     type: "post",
     data: {
-      groupid:   () => { return $("#select_my_group").children("option:selected").val(); },
-      studentid: () => { return $('#studentid1').val(); },
-      actdate:   () => { return $("input#text_a_date").val(); },
-      acttitle:  () => { return $("input#txt_active_title").val(); },
-      durationC: () => { return $("input#text_du_c").val(); },
-      durationA: () => { return $("input#text_du_a").val(); },
-      durationS: () => { return $("input#text_du_s").val(); },
-      actdesc:   () => { return $("#text_a_description").val(); },
-      groupy:    $("#chkbox_g_record").attr("checked") == "checked" ? 1 : 0,
-      joiny:     $("#chkbox_s_join").attr("checked") == "checked" ? 1 : 0
+      groupid: () => {
+        return $("#select_my_group").children("option:selected").val();
+      },
+      studentid: () => {
+        return $("#studentid1").val();
+      },
+      actdate: () => {
+        return $("input#text_a_date").val();
+      },
+      acttitle: () => {
+        return $("input#txt_active_title").val();
+      },
+      durationC: () => {
+        return $("input#text_du_c").val();
+      },
+      durationA: () => {
+        return $("input#text_du_a").val();
+      },
+      durationS: () => {
+        return $("input#text_du_s").val();
+      },
+      actdesc: () => {
+        return $("#text_a_description").val();
+      },
+      groupy: $("#chkbox_g_record").attr("checked") == "checked" ? 1 : 0,
+      joiny: $("#chkbox_s_join").attr("checked") == "checked" ? 1 : 0,
     },
-    success: function(data) {
+    success: function (data) {
       if (data.status == "ok") {
         var selValue = $("#select_my_group").children("option:selected").val();
         $("input#text_a_date").val("");
@@ -223,15 +249,16 @@ function saveRecords() {
       }
       $("#bn_save_records_info").removeAttr("disabled");
     },
-    error: function() {
-        alert("Save Record failed!");
-    }
+    error: function () {
+      alert("Save Record failed!");
+    },
   });
 }
 
 addGroupRecordInfo.addInfo = addInfo;
 addGroupRecordInfo.saveRecords = saveRecords;
 init();
-document.getElementById("text_a_description").onkeyup = function() {
-  document.getElementById("wordcount").innerHTML = `当前字数：${this.value.trim().split(/\s+/g).length}`;
+document.getElementById("text_a_description").onkeyup = function () {
+  document.getElementById("wordcount").innerHTML =
+    `当前字数：${this.value.trim().split(/\s+/g).length}`;
 };

@@ -8,7 +8,7 @@ let casObs = new MutationObserver((mutations, self) => {
       self.disconnect();
     }
   }
-})
+});
 
 let dropdownObs = new MutationObserver((mutations, self) => {
   for (let mutation of mutations) {
@@ -18,16 +18,26 @@ let dropdownObs = new MutationObserver((mutations, self) => {
       self.disconnect();
     }
   }
-})
+});
 
 function pageJump(name) {
   document.title = "TSIMS | " + name;
   let pagesWithDropdown = ["成绩查询", "成长报告", "CAS评价", "反思与记录"];
   if (pagesWithDropdown.includes(name)) {
-    dropdownObs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
+    dropdownObs.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: false,
+      characterData: false,
+    });
   }
   if (name === "活动记录") {
-    casObs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
+    casObs.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: false,
+      characterData: false,
+    });
   }
 }
 
@@ -55,4 +65,4 @@ jQuery(() => {
       }
     }
   }
-})
+});
