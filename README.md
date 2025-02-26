@@ -5,7 +5,10 @@
 This extension was created by Joshua Chen ([@Josh-Cena](https://github.com/Josh-Cena). It is now under the maintenance of the [WFLA Computerization club](https://github.com/Computerization).
 
 ## Installation
+### The Easy Way
+Easy TSIMS is now live on Chrome Webstore! Just [visit here](https://chromewebstore.google.com/detail/easy-tsims/ppfnfljemifjgimcbfcibllaapgnkedf) and click install.
 
+### The Hard Way
 After downloading the code, you will have two versions of the distribution: one `/Easy-TSIMS-extension/` and one `/Easy-TSIMS-extension.crx`. **(Take note that `/Easy-TSIMS-extension/` is different from its parent directory `/Easy-TSIMS/`! The latter is just a collection of all the things you may find useful, but the directory itself is pretty useless.)**
 
 Since the extension is not published to chrome webstore, the packed version is likely not going to work, unless you are installing it on a non-chrome browser (e.g. Edge). Therefore, after navigating to `chrome://extensions`, turn on "developer mode", then select "load unpacked", and select the directory `/Easy-TSIMS-extension/` (the one with `manifest.json` in it). Finally, activate the extension, and check if it works by opening a new tab and navigating to [TSIMS](http://101.230.1.163).
